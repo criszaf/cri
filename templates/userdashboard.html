@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      body {
+        display: flex;
+        min-height: 100vh;
+        background: #f4f6f9;
+      }
+
+      /* Sidebar */
+
+      .sidebar {
+        width: 230px;
+        background: #2f3542;
+        color: white;
+        padding: 20px;
+        position: fixed;
+        height: 100%;
+      }
+
+      .sidebar h2 {
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 22px;
+      }
+
+      .sidebar a {
+        display: flex;
+        align-items: center;
+        padding: 12px;
+        margin-bottom: 8px;
+        color: white;
+        text-decoration: none;
+        border-radius: 6px;
+        transition: background 0.2s;
+      }
+
+      .sidebar a:hover {
+        background: #57606f;
+      }
+
+      .sidebar a .icon {
+        margin-right: 10px;
+      }
+
+      /* Main Content */
+
+      .main {
+        flex: 1;
+        margin-left: 230px; /* Offset by sidebar width */
+        padding: 30px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
+        min-height: 100vh;
+      }
+
+      .header {
+        margin-bottom: 25px;
+      }
+
+      .header h1 {
+        font-size: 32px;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .header p {
+        font-size: 18px;
+        color: #777;
+      }
+
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+      }
+
+      .card {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+      }
+
+      .card h3 {
+        margin-bottom: 10px;
+        font-size: 20px;
+        color: #333;
+      }
+
+      .card a {
+        text-decoration: none;
+        color: #3742fa;
+        font-size: 14px;
+      }
+
+      /* Mobile Responsiveness */
+
+      @media (max-width: 768px) {
+        .sidebar {
+          width: 200px;
+        }
+
+        .main {
+          margin-left: 200px;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .sidebar {
+          width: 100%;
+          position: relative;
+        }
+
+        .main {
+          margin-left: 0;
+        }
+
+        .sidebar a {
+          padding: 10px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Sidebar -->
+
+    <div class="sidebar">
+      <h2>User</h2>
+
+      <a href="{{ url_for('admindashboard') }}">
+        <span class="icon">🏠</span> Dashboard
+      </a>
+      <a href="#">
+        <span class="icon">👥</span> User Management
+      </a>
+      <a href="#">
+        <span class="icon">📊</span> Reports
+      </a>
+      <a href="#">
+        <span class="icon">⚙️</span> Settings
+      </a>
+      <a href="{{ url_for('login') }}">
+        <span class="icon">🔑</span> Logout
+      </a>
+    </div>
+
+    <!-- Main Content -->
+
+    <div class="main">
+      <div class="header">
+        <h1>User Dashboard</h1>
+        <p>Welcome, User</p>
+      </div>
+
+      <div class="cards">
+        <div class="card">
+          <h3>Total Users</h3>
+          <p>500</p>
+          <a href="#">View Details</a>
+        </div>
+        <div class="card">
+          <h3>Pending Tasks</h3>
+          <p>12</p>
+          <a href="#">View Details</a>
+        </div>
+        <div class="card">
+          <h3>Active Subscriptions</h3>
+          <p>320</p>
+          <a href="#">View Details</a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
