@@ -1,4 +1,4 @@
-# CODE NI ZAFRAAAAAAAAHHH!!!
+<img width="960" height="474" alt="image" src="https://github.com/user-attachments/assets/cb84d1e4-43d0-4934-86bf-7b22d070c660" /># CODE NI ZAFRAAAAAAAAHHH!!!
 - gi tabangan ni jomsss
 
 ## PREVIEW
@@ -132,4 +132,4 @@ User:
 ## Code explanation
 basaha ra diri para sa complete explanation sa code:
 
-- [code_explaination.md](CODE_EXPLANATION.md)
+- [code_explaination.md](code_explaination.md)
