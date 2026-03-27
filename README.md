@@ -1,6 +1,9 @@
 # CODE NI ZAFRAAAAAAAAHHH!!!
 - gi tabangan ni jomsss
 
+## PREVIEW
+<img width="960" height="474" alt="image" src="https://github.com/user-attachments/assets/4c0876c7-2db0-410d-858c-05b2c9d0c0b1" />
+
 ## Unsa ni?
 
 Simple ni nga Flask project nga naay:
@@ -17,7 +20,7 @@ Sa user side, naa nay sidebar with:
 ## Module nga natackle
 
 - Module 1: Pricing Management
-- Module 2: Discount Management
+- Module 2: Features
 
 Note:
 - ang `Pricing Management` ang pinaka working feature karon
