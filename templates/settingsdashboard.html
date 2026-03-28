@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin Dashboard</title>
+    <title>Settings</title>
 
     <style>
       * {
@@ -41,7 +41,8 @@
         transition: background 0.2s;
       }
 
-      .sidebar a:hover {
+      .sidebar a:hover,
+      .sidebar a.active {
         background: #57606f;
       }
 
@@ -66,65 +67,43 @@
         border-radius: 10px;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
       }
-
-      .card h3 {
-        margin-bottom: 10px;
-      }
-
-      .card a {
-        text-decoration: none;
-        color: #3742fa;
-        font-size: 14px;
-      }
     </style>
   </head>
 
   <body>
     <div class="sidebar">
-      <h2>Admin</h2>
+      <h2>User</h2>
 
-      <a href="{{ url_for('admindashboard') }}">Dashboard</a>    
-      <a href="#">User Management</a>
-      <a href="#">Product Managent</a>      
-      <a href="#">Orders</a>
-      <a href="#">Inventory</a>
-      <a href="#">Reports</a>
-      <a href="#">Settings</a>
+      <a href="{{ url_for('userdashboard') }}">Dashboard</a>
       <a href="{{ url_for('userdashboard_section', section='pricing') }}"
-        >Open User Modules</a
+        >Pricing Management</a
+      >
+      <a href="{{ url_for('userdashboard_section', section='discount') }}"
+        >Discount Management</a
+      >
+      <a
+        href="{{ url_for('userdashboard_section', section='settings') }}"
+        class="active"
+        >Settings</a
       >
       <a href="{{ url_for('logout') }}">Logout</a>
     </div>
 
     <div class="main">
       <div class="header">
-        <h1>Admin Dashboard</h1>
+        <h1>Settings</h1>
         <p>Welcome, {{ username }}</p>
       </div>
 
       <div class="cards">
         <div class="card">
-          <h3>Users</h3>
-          <p>Manage system users.</p>
-          <a href="#">View Users</a>
+          <h3>Account</h3>
+          <p>User: {{ username }}</p>
         </div>
 
         <div class="card">
-          <h3>Products</h3>
-          <p>Manage products and pricing.</p>
-          <a href="#">View Products</a>
-        </div>
-
-        <div class="card">
-          <h3>Inventory</h3>
-          <p>Monitor stock levels.</p>
-          <a href="#">Open Inventory</a>
-        </div>
-
-        <div class="card">
-          <h3>Reports</h3>
-          <p>View sales and activity reports.</p>
-          <a href="#">Generate Reports</a>
+          <h3>Role</h3>
+          <p>{{ role|title }}</p>
         </div>
       </div>
     </div>

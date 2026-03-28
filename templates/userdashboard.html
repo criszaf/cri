@@ -1,7 +1,6 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <script src="https://unpkg.com"></script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>User Dashboard</title>
@@ -19,8 +18,6 @@
         min-height: 100vh;
         background: #f4f6f9;
       }
-
-      /* Sidebar */
 
       .sidebar {
         width: 230px;
@@ -44,11 +41,10 @@
         transition: background 0.2s;
       }
 
-      .sidebar a:hover {
+      .sidebar a:hover,
+      .sidebar a.active {
         background: #57606f;
       }
-
-      /* Main Content */
 
       .main {
         flex: 1;
@@ -85,49 +81,45 @@
   </head>
 
   <body>
-    <!-- Sidebar -->
-
     <div class="sidebar">
       <h2>User</h2>
 
       <a href="{{ url_for('admindashboard') }}">Dashboard</a>
-      <a href="#">Pricing Management Functionalities</a>
+      <a href="pricingdashboard.html"class="btn">Dasboard</a>
       <a href="#">Discount Management Functionalities</a>
       <a href="#">Settings</a>
       <a href="{{ url_for('login') }}">Logout</a>
     </div>
 
-    <!-- Main Content -->
-
     <div class="main">
       <div class="header">
         <h1>User Dashboard</h1>
-        <p>Welcome, User</p>
+        <p>Welcome, {{ username }}</p>
       </div>
 
       <div class="cards">
         <div class="card">
-          <h3>Users</h3>
-          <p>Manage system users.</p>
-          <a href="#">View Users</a>
+          <h3>Pricing Management</h3>
+          <p>Open pricing management from the sidebar without losing the user layout.</p>
+          <a href="{{ url_for('userdashboard_section', section='pricing') }}"
+            >Open Pricing Management</a
+          >
         </div>
 
         <div class="card">
-          <h3>Products</h3>
-          <p>Manage products and pricing.</p>
-          <a href="#">View Products</a>
+          <h3>Settings</h3>
+          <p>Open settings in a separate tab page with the same sidebar.</p>
+          <a href="{{ url_for('userdashboard_section', section='settings') }}"
+            >Open Settings</a
+          >
         </div>
 
         <div class="card">
-          <h3>Inventory</h3>
-          <p>Monitor stock levels.</p>
-          <a href="#">Open Inventory</a>
-        </div>
-
-        <div class="card">
-          <h3>Reports</h3>
-          <p>View sales and activity reports.</p>
-          <a href="#">Generate Reports</a>
+          <h3>Discount Management</h3>
+          <p>Open a placeholder page for discount management.</p>
+          <a href="{{ url_for('userdashboard_section', section='discount') }}"
+            >Open Discount Management</a
+          >
         </div>
       </div>
     </div>
