@@ -63,35 +63,6 @@
         margin-bottom: 20px;
       }
 
-      .message-list {
-        margin-bottom: 20px;
-      }
-
-      .message-list {
-        padding: 12px 14px;
-        border-radius: 8px;
-        display: none;
-      }
-
-      .message-list.success {
-        background: #dcfce7;
-        color: #166534;
-        display: block;
-      }
-
-      .message-list.error {
-        background: #fee2e2;
-        color: #991b1b;
-        display: block;
-      }
-
-      .form-row {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: 15px;
-        margin-top: 15px;
-      }
-
       .field label {
         display: block;
         font-size: 14px;
@@ -100,7 +71,6 @@
       }
 
       .field input,
-      .field select,
       .field button {
         width: 100%;
         padding: 10px;
@@ -113,6 +83,13 @@
         background: #2f3542;
         color: white;
         cursor: pointer;
+      }
+
+      .search-row {
+        display: grid;
+        grid-template-columns: minmax(220px, 320px) 160px;
+        gap: 15px;
+        align-items: end;
       }
 
       table {
@@ -178,41 +155,23 @@
     </div>
 
     <div class="main">
-      <div class="message-list" id="statusMessage"></div>
-
       <div class="header">
         <h1>Pricing Management</h1>
         <p>Welcome, {{ username }}</p>
       </div>
 
       <div class="card">
-        <h3>Set Product Base Price</h3>
-
-        <form id="pricingForm">
-          <div class="form-row">
-            <div class="field">
-              <label for="product_id">Product ID</label>
-              <input type="text" name="product_id" id="product_id" required />
-            </div>
-
-            <div class="field">
-              <label for="price">Price</label>
-              <input
-                type="number"
-                name="price"
-                id="price"
-                step="0.01"
-                min="0.01"
-                required
-              />
-            </div>
-
-            <div class="field">
-              <label>&nbsp;</label>
-              <button type="submit">Save Price</button>
-            </div>
+        <h3>Search Product by ID</h3>
+        <div class="search-row">
+          <div class="field">
+            <label for="searchProductId">Product ID</label>
+            <input type="text" id="searchProductId" placeholder="Enter product ID" />
           </div>
-        </form>
+          <div class="field">
+            <label>&nbsp;</label>
+            <button type="button" id="clearSearchBtn">Clear Search</button>
+          </div>
+        </div>
       </div>
 
       <div class="card">
@@ -226,146 +185,76 @@
             </tr>
           </thead>
           <tbody id="pricingTableBody"></tbody>
-          <!-- diri mo load ag mga gipang save nga products -->
         </table>
       </div>
     </div>
 
     <script>
       const storageKey = "pricing_products";
-      const pricingForm = document.getElementById("pricingForm");
-      const productIdInput = document.getElementById("product_id");
-      const priceInput = document.getElementById("price");
       const pricingTableBody = document.getElementById("pricingTableBody");
-      const statusMessage = document.getElementById("statusMessage");
-      const productListId = "savedProductIds";
+      const searchProductIdInput = document.getElementById("searchProductId");
+      const clearSearchBtn = document.getElementById("clearSearchBtn");
 
       function getProducts() {
         const savedProducts = localStorage.getItem(storageKey);
         return savedProducts ? JSON.parse(savedProducts) : [];
       }
 
-      function saveProducts(products) {
-        localStorage.setItem(storageKey, JSON.stringify(products));
-      }
-
-      function renderProductOptions() {
-        const products = getProducts().slice().sort((a, b) => Number(a.id) - Number(b.id));
-        let datalist = document.getElementById(productListId);
-
-        if (!datalist) {
-          datalist = document.createElement("datalist");
-          datalist.id = productListId;
-          document.body.appendChild(datalist);
-        }
-
-        datalist.innerHTML = products
-          .map((product) => `<option value="${product.id}"></option>`)
-          .join("");
-
-        productIdInput.setAttribute("list", productListId);
-      }
-
-      function showMessage(message, type) {
-        statusMessage.textContent = message;
-        statusMessage.className = "message-list " + type;
-      }
-
       function formatPrice(price) {
         return Number(price).toFixed(2);
       }
 
-      function renderProducts() {
+      function renderProducts(filterId = "") {
         const products = getProducts();
+        const filteredProducts = filterId
+          ? products.filter((product) =>
+              String(product.id).toLowerCase().includes(filterId.toLowerCase())
+            )
+          : products;
+
         pricingTableBody.innerHTML = "";
 
-        if (products.length === 0) {
+        if (filteredProducts.length === 0) {
           pricingTableBody.innerHTML = `
             <tr>
-              <td colspan="3" class="empty-state">No products saved yet.</td>
+              <td colspan="3" class="empty-state">No matching products found.</td>
             </tr>
           `;
           return;
         }
 
-        products.forEach((product) => {
+        filteredProducts.forEach((product) => {
           const historyItems = product.price_history
             .slice()
             .reverse()
             .map((entry) => {
               const priceText =
                 entry.old_price === null
-                  ? `Initial: ₱${formatPrice(entry.new_price)}`
-                  : `₱${formatPrice(entry.old_price)} to ₱${formatPrice(entry.new_price)}`;
+                  ? `Initial: ₱ ${formatPrice(entry.new_price)}`
+                  : `₱ ${formatPrice(entry.old_price)} to ₱ ${formatPrice(entry.new_price)}`;
               return `<li>${priceText}<br /><small>${entry.timestamp}</small></li>`;
             })
             .join("");
 
-          pricingTableBody.innerHTML += `
-            <tr>
-              <td>${product.id}</td>
-              <td>₱${formatPrice(product.base_price)}</td>
-              <td><ul class="history-list">${historyItems}</ul></td>
-            </tr>
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${product.id}</td>
+            <td>₱ ${formatPrice(product.base_price)}</td>
+            <td><ul class="history-list">${historyItems}</ul></td>
           `;
+          pricingTableBody.appendChild(row);
         });
-
-        renderProductOptions();
       }
 
-      pricingForm.addEventListener("submit", function (event) {
-        event.preventDefault();
-
-        const productId = productIdInput.value.trim();
-        const price = priceInput.value.trim();
-
-        if (productId === "" || price === "") {
-          showMessage("Product ID and price are required.", "error");
-          return;
-        }
-
-        if (Number(price) <= 0) {
-          showMessage("Price must be greater than 0.", "error");
-          return;
-        }
-
-        const products = getProducts();
-        const existingProduct = products.find(
-          (product) => String(product.id) === productId
-        );
-        const timestamp = new Date().toLocaleString();
-
-        if (existingProduct) {
-          const oldPrice = Number(existingProduct.base_price);
-          existingProduct.base_price = Number(price);
-          existingProduct.price_history.push({
-            old_price: oldPrice,
-            new_price: Number(price),
-            timestamp: timestamp,
-          });
-          showMessage("Mana, nabag-o na.", "success");
-        } else {
-          products.push({
-            id: productId,
-            base_price: Number(price),
-            price_history: [
-              {
-                old_price: null,
-                new_price: Number(price),
-                timestamp: timestamp,
-              },
-            ],
-          });
-          showMessage("Mana, nabutang na.", "success");
-        }
-
-        saveProducts(products);
-        renderProductOptions();
-        renderProducts();
-        pricingForm.reset();
+      searchProductIdInput.addEventListener("input", function () {
+        renderProducts(this.value.trim());
       });
 
-      renderProductOptions();
+      clearSearchBtn.addEventListener("click", function () {
+        searchProductIdInput.value = "";
+        renderProducts();
+      });
+
       renderProducts();
     </script>
   </body>
