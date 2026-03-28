@@ -19,6 +19,10 @@ def admindashboard():
 def adminproductmanagement():
     return render_template('adminproductmanagement.html', username='Admin')
 
+@app.route('/admindashboard/discount-management')
+def admindiscountmanagement():
+    return render_template('admindiscountmanagement.html', username='Admin')
+
 @app.route('/userdashboard')
 def userdashboard():
     return render_template('userdashboard.html', username='User', role='user')

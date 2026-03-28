@@ -291,6 +291,7 @@
       <a href="{{ url_for('admindashboard') }}">Dashboard</a>
       <a href="#">User Management</a>
       <a href="{{ url_for('adminproductmanagement') }}" class="active">Product Management</a>
+      <a href="{{ url_for('admindiscountmanagement') }}">Discount Management</a>
       <a href="#">Orders</a>
       <a href="#">Inventory</a>
       <a href="#">Reports</a>
@@ -361,7 +362,7 @@
           <input type="text" id="sidebarProductId" />
         </div>
         <div class="field">
-          <label for="sidebarPrice">Base Price (PHP)</label>
+          <label for="sidebarPrice">Base Price (₱)</label>
           <input type="number" id="sidebarPrice" step="0.01" min="0.01" />
         </div>
         <button id="removeProductBtn" class="btn-danger">Remove Product</button>
@@ -433,8 +434,8 @@
           .map((entry) => {
             const priceText =
               entry.old_price === null
-                ? `Initial: PHP ${formatPrice(entry.new_price)}`
-                : `PHP ${formatPrice(entry.old_price)} -> PHP ${formatPrice(entry.new_price)}`;
+                ? `Initial: ₱ ${formatPrice(entry.new_price)}`
+                : `₱ ${formatPrice(entry.old_price)} -> ₱ ${formatPrice(entry.new_price)}`;
             const date = new Date(entry.timestamp).toLocaleDateString();
             return `
               <div class="history-item">
@@ -556,8 +557,8 @@
             .map((entry) => {
               const priceText =
                 entry.old_price === null
-                  ? `Initial: PHP ${formatPrice(entry.new_price)}`
-                  : `PHP ${formatPrice(entry.old_price)} to PHP ${formatPrice(entry.new_price)}`;
+                  ? `Initial: ₱ ${formatPrice(entry.new_price)}`
+                  : `₱ ${formatPrice(entry.old_price)} to ₱ ${formatPrice(entry.new_price)}`;
               return `<li>${priceText}<br /><small>${entry.timestamp}</small></li>`;
             })
             .join("");
@@ -565,7 +566,7 @@
           const row = document.createElement("tr");
           row.innerHTML = `
             <td>${product.id}</td>
-            <td>PHP ${formatPrice(product.base_price)}</td>
+            <td>₱ ${formatPrice(product.base_price)}</td>
             <td><ul class="history-list">${historyItems}</ul></td>
           `;
 
