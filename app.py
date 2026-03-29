@@ -13,7 +13,15 @@ def home():
 
 @app.route('/admindashboard')
 def admindashboard():
-    return render_template('admindashboard.html')
+    return render_template('admindashboard.html', username='Admin')
+
+@app.route('/admindashboard/product-management')
+def adminproductmanagement():
+    return render_template('adminproductmanagement.html', username='Admin')
+
+@app.route('/admindashboard/discount-management')
+def admindiscountmanagement():
+    return render_template('admindiscountmanagement.html', username='Admin')
 
 @app.route('/userdashboard')
 def userdashboard():
@@ -52,7 +60,11 @@ def login():
         password = request.form['password']
         if username in users:
             if users[username][0] == password and users[username][1] == 'admin':
-                return render_template('admindashboard.html', massage=username)
+                return render_template(
+                    'admindashboard.html',
+                    massage=username,
+                    username=username
+                )
             else:
                 return render_template(
                     'userdashboard.html',
