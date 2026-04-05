@@ -289,16 +289,10 @@
       <h2>Admin</h2>
 
       <a href="{{ url_for('admindashboard') }}">Dashboard</a>
-      <a href="#">User Management</a>
       <a href="{{ url_for('adminproductmanagement') }}" class="active">Product Management</a>
       <a href="{{ url_for('admindiscountmanagement') }}">Discount Management</a>
-      <a href="#">Orders</a>
-      <a href="#">Inventory</a>
-      <a href="#">Reports</a>
       <a href="#">Settings</a>
-      <a href="{{ url_for('userdashboard_section', section='pricing') }}"
-        >Open User Modules</a
-      >
+
       <a href="{{ url_for('logout') }}">Logout</a>
     </div>
 
@@ -323,7 +317,7 @@
 
             <div class="field">
               <label for="price">Price</label>
-              <input type="number" name="price" id="price" step="0.01" min="0.01" required />
+              <input type="number" name="price" id="price" required />
             </div>
 
             <div class="field">
@@ -389,7 +383,7 @@
       const sidebarPriceInput = document.getElementById("sidebarPrice");
       const removeProductBtn = document.getElementById("removeProductBtn");
       const priceHistoryDisplay = document.getElementById("priceHistoryDisplay");
-      const mainDiv = document.querySelector(".main");
+      const mainDiv = document.querySelector(".main");         
 
       let currentProductId = null;
 

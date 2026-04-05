@@ -62,13 +62,9 @@
       <h2>Admin</h2>
 
       <a href="{{ url_for('admindashboard') }}" class="active">Dashboard</a>
-      <a href="#">User Management</a>
       <a href="{{ url_for('adminproductmanagement') }}">Product Management</a>
       <a href="{{ url_for('admindiscountmanagement') }}">Discount Management</a>    
       <a href="#">Settings</a>
-      <a href="{{ url_for('userdashboard_section', section='pricing') }}"
-        >Open User Modules</a
-      >
       <a href="{{ url_for('logout') }}">Logout</a>
     </div>
 
@@ -79,9 +75,11 @@
       </div>
 
       <div class="cards">
-        <div class="card">
-          <h3>Product Management</h3>
-          <p>Open product management from the sidebar without losing the user layout.</p>         
+        <div class="card">       
+          <h1> <p style= "color : purple;"> Product Pricing and Discount Management System</h1>
+
+          <h4> <p style= "color : purple;"> Manage product pricing ,discount, and promotional period.
+                   
     </div>
   </body>
 </html>

@@ -3,8 +3,8 @@ from flask import Flask, render_template, redirect, url_for, request
 app = Flask(__name__)
 
 users = {
-    'gwapo@bisu.edu.ph' : ['admin123','admin'],
-    'pangit@bisu.edu.ph' : ['user123','user']
+    'gwapo@bisu.edu.ph' : ['admin','admin'],
+    'pangit@bisu.edu.ph' : ['user','user']
 }
 
 @app.route('/')
@@ -58,23 +58,34 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+        
+        # Check if username exists
         if username in users:
-            if users[username][0] == password and users[username][1] == 'admin':
-                return render_template(
-                    'admindashboard.html',
-                    massage=username,
-                    username=username
-                )
+            # Check if password is correct
+            if users[username][0] == password:
+                role = users[username][1]
+                if role == 'admin':
+                    return render_template(
+                        'admindashboard.html',
+                        message=username,
+                        username=username
+                    )
+                else:
+                    return render_template(
+                        'userdashboard.html',
+                        message=username,
+                        username=username,
+                        role=role
+                    )
             else:
-                return render_template(
-                    'userdashboard.html',
-                    massage=username,
-                    username=username,
-                    role=users[username][1]
-                )           
+                # Password is incorrect
+                return render_template('login.html', message='Invalid username or password')
         else:
-             return render_template('login.html', massage='Invalid username or password')        
-    return render_template('login.html', massage='')  
+            # Username doesn't exist
+            return render_template('login.html', message='Invalid username or password')
+    
+    # GET request
+    return render_template('login.html', message='')
 
 
 if __name__ == '__main__':
