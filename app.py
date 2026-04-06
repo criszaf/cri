@@ -9,7 +9,7 @@ users = {
 
 @app.route('/')
 def home():
-    return 'KINSA KA OOOIIIEEEEE'
+    return '<meta charset="UTF-8"><h1>KINSA KA OOOIIIEEEEE ABOT MAN KA DIREEEEE &#128544;</h1>'
 
 @app.route('/admindashboard')
 def admindashboard():
@@ -58,10 +58,8 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        
-        # Check if username exists
-        if username in users:
-            # Check if password is correct
+               
+        if username in users:           
             if users[username][0] == password:
                 role = users[username][1]
                 if role == 'admin':
@@ -77,14 +75,9 @@ def login():
                         username=username,
                         role=role
                     )
-            else:
-                # Password is incorrect
+            else:              
                 return render_template('login.html', message='Invalid username or password')
-        else:
-            # Username doesn't exist
-            return render_template('login.html', message='Invalid username or password')
-    
-    # GET request
+        
     return render_template('login.html', message='')
 
 
