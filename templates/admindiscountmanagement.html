@@ -97,11 +97,27 @@
       }
 
       .field input,
+      .field select,
       .field button {
         width: 100%;
         padding: 10px;
         border-radius: 6px;
         border: 1px solid #cbd5e1;
+      }
+
+      .field select {
+        background: white;
+        color: #111827;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-image: linear-gradient(45deg, transparent 50%, #64748b 50%),
+          linear-gradient(135deg, #64748b 50%, transparent 50%);
+        background-position: calc(100% - 18px) calc(50% - 3px),
+          calc(100% - 12px) calc(50% - 3px);
+        background-size: 6px 6px, 6px 6px;
+        background-repeat: no-repeat;
+        padding-right: 36px;
       }
 
       .field button {
@@ -186,15 +202,18 @@
 
             <div class="field">
               <label for="discount_percent">Discount Percent</label>
-              <input
-                type="number"
+              <select
                 name="discount_percent"
                 id="discount_percent"
-                step="0.01"
-                min="0.01"
-                max="100"
                 required
-              />
+              >
+                <option value="">Select Discount Percent</option>
+                <option value="10">10% - Rule 1 (10% off)</option>
+                <option value="20">20% - Rule 2 (20% off)</option>
+                <option value="30">30% - Rule 3 (30% off)</option>
+                <option value="40">40% - Rule 4 (40% off)</option>
+                <option value="50">50% - Rule 5 (50% off)</option>
+              </select>
             </div>
 
             <div class="field">
