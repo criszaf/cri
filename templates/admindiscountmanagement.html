@@ -177,6 +177,15 @@
         font-weight: 500;
       }
 
+      .expired-discount {
+        opacity: 0.5;
+        background: #f1f5f9;
+      }
+
+      .expired-discount td {
+        color: #64748b;
+      }
+
       .countdown {
         font-weight: bold;
         color: #d9534f;
@@ -330,21 +339,6 @@
         return hoursRemaining;
       }
 
-      // Remove expired discounts from storage
-      function removeExpiredDiscounts() {
-        const discounts = getDiscounts();
-        const now = new Date().getTime();
-        
-        const validDiscounts = discounts.filter(discount => {
-          return discount.expiration_timestamp > now;
-        });
-        
-        if (validDiscounts.length < discounts.length) {
-          saveDiscounts(validDiscounts);
-          renderDiscounts();
-        }
-      }
-
       // Show product ID suggestions
       function renderProductOptions() {
         const products = getProducts().slice().sort((a, b) => Number(a.id) - Number(b.id));
@@ -392,7 +386,19 @@
               time_remaining: timeRemaining,
             };
           })
-          .filter(Boolean);
+          .filter(Boolean)
+          .sort((a, b) => {
+            const aExpired = a.time_remaining <= 0;
+            const bExpired = b.time_remaining <= 0;
+
+            if (aExpired !== bExpired) {
+              return aExpired ? 1 : -1;
+            }
+
+            return aExpired
+              ? Number(b.expiration_timestamp) - Number(a.expiration_timestamp)
+              : Number(a.expiration_timestamp) - Number(b.expiration_timestamp);
+          });
       }
 
       // Draw discount table with countdown timers
@@ -412,8 +418,9 @@
         rows.forEach((item) => {
           const row = document.createElement("tr");
           
-          // Highlight if expiring soon (less than 1 hour)
-          if (item.time_remaining < 1) {
+          if (item.time_remaining <= 0) {
+            row.classList.add("expired-discount");
+          } else if (item.time_remaining < 1) {
             row.classList.add("expiring-soon");
           }
           
@@ -516,7 +523,6 @@
 
       // Update countdown timers every second
       setInterval(function() {
-        removeExpiredDiscounts();
         renderDiscounts();
       }, 1000);
 

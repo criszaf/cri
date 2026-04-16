@@ -128,6 +128,15 @@
         font-weight: bold;
         color: #d9534f;
       }
+
+      .expired-discount {
+        opacity: 0.5;
+        background: #f1f5f9;
+      }
+
+      .expired-discount td {
+        color: #64748b;
+      }
     </style>
   </head>
 
@@ -169,7 +178,7 @@
       </div>
 
       <div class="card">
-        <h3>Active Discounts</h3>
+        <h3>Discounts</h3>
         <table>
           <thead>
             <tr>
@@ -248,7 +257,19 @@
               time_remaining: timeRemaining,
             };
           })
-          .filter((item) => item && item.time_remaining > 0)
+          .filter(Boolean)
+          .sort((a, b) => {
+            const aExpired = a.time_remaining <= 0;
+            const bExpired = b.time_remaining <= 0;
+
+            if (aExpired !== bExpired) {
+              return aExpired ? 1 : -1;
+            }
+
+            return aExpired
+              ? Number(b.time_remaining) - Number(a.time_remaining)
+              : Number(a.time_remaining) - Number(b.time_remaining);
+          })
           .filter((item) =>
             filterId
               ? String(item.product_id).toLowerCase().includes(filterId.toLowerCase())
@@ -268,12 +289,16 @@
 
         rows.forEach((item) => {
           const row = document.createElement("tr");
+          if (item.time_remaining <= 0) {
+            row.classList.add("expired-discount");
+          }
+
           row.innerHTML = `
             <td>${item.product_id}</td>
             <td>₱ ${formatPrice(item.base_price)}</td>
             <td>${item.discount_percent.toFixed(2)}%</td>
             <td>₱ ${formatPrice(item.discounted_price)}</td>
-            <td class="countdown">${formatTimeRemaining(item.time_remaining)}</td>
+            <td class="countdown">${item.time_remaining > 0 ? formatTimeRemaining(item.time_remaining) : "Expired"}</td>
           `;
           discountTableBody.appendChild(row);
         });
