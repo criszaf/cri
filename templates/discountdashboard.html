@@ -123,6 +123,20 @@
       .empty-state {
         color: #555;
       }
+
+      .countdown {
+        font-weight: bold;
+        color: #d9534f;
+      }
+
+      .expired-discount {
+        opacity: 0.5;
+        background: #f1f5f9;
+      }
+
+      .expired-discount td {
+        color: #64748b;
+      }
     </style>
   </head>
 
@@ -164,7 +178,7 @@
       </div>
 
       <div class="card">
-        <h3>Active Discounts</h3>
+        <h3>Discounts</h3>
         <table>
           <thead>
             <tr>
@@ -172,6 +186,7 @@
               <th>Base Price</th>
               <th>Discount</th>
               <th>Discounted Price</th>
+              <th>Expires In</th>
             </tr>
           </thead>
           <tbody id="discountTableBody"></tbody>
@@ -200,6 +215,19 @@
         return Number(price).toFixed(2);
       }
 
+      function formatTimeRemaining(millisecondsRemaining) {
+        const totalSeconds = Math.max(0, Math.floor(millisecondsRemaining / 1000));
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+
+        return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+      }
+
+      function getTimeRemaining(expirationTimestamp) {
+        return Number(expirationTimestamp) - Date.now();
+      }
+
       function renderDiscounts(filterId = "") {
         const products = getProducts();
         const discounts = getDiscounts();
@@ -219,15 +247,29 @@
             const discountedPrice =
               Number(product.base_price) -
               (Number(product.base_price) * Number(discount.discount_percent)) / 100;
+            const timeRemaining = getTimeRemaining(discount.expiration_timestamp);
 
             return {
               product_id: discount.product_id,
               base_price: Number(product.base_price),
               discount_percent: Number(discount.discount_percent),
               discounted_price: discountedPrice < 0 ? 0 : discountedPrice,
+              time_remaining: timeRemaining,
             };
           })
           .filter(Boolean)
+          .sort((a, b) => {
+            const aExpired = a.time_remaining <= 0;
+            const bExpired = b.time_remaining <= 0;
+
+            if (aExpired !== bExpired) {
+              return aExpired ? 1 : -1;
+            }
+
+            return aExpired
+              ? Number(b.time_remaining) - Number(a.time_remaining)
+              : Number(a.time_remaining) - Number(b.time_remaining);
+          })
           .filter((item) =>
             filterId
               ? String(item.product_id).toLowerCase().includes(filterId.toLowerCase())
@@ -239,7 +281,7 @@
         if (rows.length === 0) {
           discountTableBody.innerHTML = `
             <tr>
-              <td colspan="4" class="empty-state">No matching discounts found.</td>
+              <td colspan="5" class="empty-state">No matching discounts found.</td>
             </tr>
           `;
           return;
@@ -247,11 +289,16 @@
 
         rows.forEach((item) => {
           const row = document.createElement("tr");
+          if (item.time_remaining <= 0) {
+            row.classList.add("expired-discount");
+          }
+
           row.innerHTML = `
             <td>${item.product_id}</td>
             <td>₱ ${formatPrice(item.base_price)}</td>
             <td>${item.discount_percent.toFixed(2)}%</td>
             <td>₱ ${formatPrice(item.discounted_price)}</td>
+            <td class="countdown">${item.time_remaining > 0 ? formatTimeRemaining(item.time_remaining) : "Expired"}</td>
           `;
           discountTableBody.appendChild(row);
         });
@@ -265,6 +312,16 @@
         searchProductIdInput.value = "";
         renderDiscounts();
       });
+
+      window.addEventListener("storage", function (event) {
+        if (event.key === productStorageKey || event.key === discountStorageKey) {
+          renderDiscounts(searchProductIdInput.value.trim());
+        }
+      });
+
+      setInterval(function () {
+        renderDiscounts(searchProductIdInput.value.trim());
+      }, 1000);
 
       renderDiscounts();
     </script>
